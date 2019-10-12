@@ -9,7 +9,9 @@ as used in Ethereum 2.0.
   Abelian groups. We prove that under some mild assumptions about the input
   list, swap-or-not shuffle yields a permutation.
 
-## TODO
+The proofs are compatible with [Isabelle 2019](https://isabelle.in.tum.de/)
+
+## Next Steps
 
 The next step will be to instantiate the abstract shuffle with the key and round functions
 used in Eth2, which are based on hashing and modulo arithmetic on integers.
