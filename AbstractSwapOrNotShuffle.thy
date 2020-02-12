@@ -3,6 +3,7 @@ imports
   HOL.List
   "HOL-Library.Permutation"
   "HOL-Algebra.Ring"
+  "HOL-Algebra.Elementary_Groups"
   "HOL-Word.Word"
   "Word_Lib.Word_Syntax"
   "Word_Lib.Word_Lemmas"
@@ -241,37 +242,29 @@ lemma add_mod_distrib_int:
 lemma word_mod_add_right_eq:
   "\<lbrakk>n > 0; x < vrl; y < vrl\<rbrakk> \<Longrightarrow> (x + y mod n) mod n = (x + y) mod (n :: u64)"
   apply (clarsimp simp: word_mod_def word_add_def word_less_def)
+  sorry
 find_theorems word_of_int uint
+
+find_theorems name: Ring
+
+thm abelian_groupE(3)[simplified abelian_group_def]
+
+find_theorems "abelian_group" 
 
 lemma add_mod_distrib:
   "\<lbrakk>n > 0; n \<le> vrl; x < n; y < n; z < n\<rbrakk> \<Longrightarrow>
   ((x + y) mod n + z) mod n = (x + (y + z) mod n) mod (n :: u64)"
-thm add.commute
-  apply (subst add.commute[where b=z])
-  apply (subst word_mod_add_right_eq, assumption, assumption)
+  apply (clarsimp simp: word_add_def)
 
-find_theorems "(_ :: _ word) + _" name: comm
-  by (fastforce simp: add.commute add.left_commute word_mod_add_right_eq)
-  (*
-   ((x + y) mod n + z) mod n =
-   ((x mod n + y mod n) mod n + z) mod n = 
-   ((x mod n + y mod n) mod n + z mod n) mod n =
-  *)
 
-  apply (clarsimp simp: word_mod_def word_add_def word_le_def word_less_def)
-  sorry
+
+  apply (clarsimp simp: word_of_int_def)
+sorry
 
 locale bounded_n =
   fixes n :: u64
   assumes n_non_zero: "n > 0"
   assumes n_leq_validator_registry_limit: "n \<le> 2^40"
-
-find_theorems "?a \<and> ?b \<Longrightarrow> ?a"
-
-lemma "x < y \<and> x > 10000 \<Longrightarrow> x < y"
-  apply (rule conjunct1)
-  apply assumption
-  done
 
 sublocale bounded_n < mod_word_abelian: abelian_group "mod_word_group n"
    apply (clarsimp simp: abelian_group_def)
